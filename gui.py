@@ -101,8 +101,16 @@ class Input(LabelFrame):
 		self.comboBox_5.grid(row = 1, column = 7)
 
 	def OnButtonClick(self):
+		self.GetNumericValues()
 		# send to submit button in main
 		self.simulateButton.event_generate("<<input_simulate>>")
+
+	def IsFloat(self, string):
+		try:
+			float(string)
+			return True
+		except ValueError:
+			return False
 
 	def GetNumericValues(self):
 		value1 = self.inputEntry_1.get()
@@ -113,13 +121,13 @@ class Input(LabelFrame):
 		value6 = self.inputEntry_6.get()
 		value7 = self.inputEntry_7.get()
 
-		if not isinstance(value1, int): print "Yo, field 1 has to be an int"
-		if not value2.isdigit(): print "Field 2 has to be a digit!"
-		if not value3.isdigit(): print "Field 3 has to be a digit!"
-		if not value4.isdigit(): print "Field 4 has to be a digit!"
-		if not value5.isdigit(): print "Field 5 has to be a digit!"
-		if not value6.isdigit(): print "Field 6 has to be a digit!"
-		if not value7.isdigit(): print "Field 7 has to be a digit!"
+		if not value1.isdigit():	 print "Field 1 has to be an int"
+		if not self.IsFloat(value2): print "Field 2 has to be a number!"
+		if not self.IsFloat(value3): print "Field 3 has to be a number!"
+		if not self.IsFloat(value4): print "Field 4 has to be a number!"
+		if not self.IsFloat(value5): print "Field 5 has to be a number!"
+		if not self.IsFloat(value6): print "Field 6 has to be a number!"
+		if not self.IsFloat(value7): print "Field 7 has to be a number!"
 		
 	def GetDropDownValue(self, event):
 		#self.value_of_combo = self.box.get()
@@ -133,5 +141,5 @@ class Output(LabelFrame):
     def __init__(self, parent):
 		LabelFrame.__init__(self, parent, text = "Output")
 		self.outputText = Label(self, text="some output")
-
+		self.outputText.pack()
 
