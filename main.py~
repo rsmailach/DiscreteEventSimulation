@@ -16,7 +16,7 @@ class MyWindow(Tk):
 		self.parent = parent		# reference to parent
 		self.initialize()
 
-	def initialize(self):		
+	def initialize(self):			# initialize widgets in this method
 		self.process = simulation.Model()		
 		# self.grid()					# display widgets as grid
 
@@ -25,13 +25,13 @@ class MyWindow(Tk):
 		self.frameIn.grid(row = 0, column = 0, padx = 5, pady =5, ipadx = 5, ipady = 5)
 
 		# create the output frame
-		self.frameOut = gui.Output(self)
+		self.frameOut = gui.Out(self)
 		self.frameOut.grid(row = 1, column = 0, padx = 5, pady =5, ipadx = 5, ipady = 5)
 
 		# bind simulate button
 		self.bind("<<input_simulate>>", self.submit)
 
-	def submit(self, event):
+	def submit(self, event = None):
 		print "submit method"
 	        #value = self.frameIn.getValue()
 	        #result = self.process.addValue(value)
