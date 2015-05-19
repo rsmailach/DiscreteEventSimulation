@@ -1,23 +1,22 @@
-#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------#
 # gui.py
 #  
-# This class is used as a graphical user interface for a larger application.
+# This class is used as a graphical user interface for a larger
+# application.
 # 
 # Rachel Mailach
-#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------#
 from Tkinter import *
 import ttk
 
 class Input(LabelFrame):
+	valuesList = []
+	distList = []
+	List = []
+
 	def __init__(self, parent):
 		LabelFrame.__init__(self, parent, text = "Input")
-		#value1 = 0
-		#value2 = 0
-		#value3 = 0
-		#value4 = 0
-		#value5 = 0
-		#value6 = 0
-		#value7 = 0
+
 		self.inputEntry_1 = StringVar()
 		self.inputEntry_2 = StringVar()
 		self.inputEntry_3 = StringVar()
@@ -26,7 +25,7 @@ class Input(LabelFrame):
 		self.inputEntry_6 = StringVar()
 		self.inputEntry_7 = StringVar()
 
-		# create widgets, parent = self because our window is the parent of these widgets
+		# create widgets, parent = self because window is parent
 		# Labels
 		self.numServers = Label(self, text = "number of servers")	# number of servers
 		self.arrivalRate = Label(self, text = u'\u03bb')			# lambda
@@ -61,19 +60,19 @@ class Input(LabelFrame):
 		#self.combo = ttk.Labelframe(self, text = 'Distributions')
 		self.comboBox_1 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_1.current(0) # set selection
-		self.comboBox_1.bind('<<ComboboxSelected>>', self.GetDropDownValue)
+		#self.comboBox_1.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 		self.comboBox_2 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_2.current(0) # set selection
-		self.comboBox_2.bind('<<ComboboxSelected>>', self.GetDropDownValue)
+		#self.comboBox_2.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 		self.comboBox_3 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_3.current(0) # set selection
-		self.comboBox_3.bind('<<ComboboxSelected>>', self.GetDropDownValue)
+		#self.comboBox_3.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 		self.comboBox_4 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_4.current(0) # set selection
-		self.comboBox_4.bind('<<ComboboxSelected>>', self.GetDropDownValue)
+		#self.comboBox_4.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 		self.comboBox_5 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_5.current(0) # set selection
-		self.comboBox_5.bind('<<ComboboxSelected>>', self.GetDropDownValue)
+		#self.comboBox_5.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 
 		# send to layout manager 
 		self.numServers.grid(row = 0, column = 0)
@@ -102,6 +101,7 @@ class Input(LabelFrame):
 
 	def OnButtonClick(self):
 		self.GetNumericValues()
+		self.GetDropDownValues()
 		# send to submit button in main
 		self.simulateButton.event_generate("<<input_simulate>>")
 
@@ -113,6 +113,7 @@ class Input(LabelFrame):
 			return False
 
 	def GetNumericValues(self):
+		print "GetNumericValue is called"
 		value1 = self.inputEntry_1.get()
 		value2 = self.inputEntry_2.get()
 		value3 = self.inputEntry_3.get()
@@ -128,18 +129,55 @@ class Input(LabelFrame):
 		if not self.IsFloat(value5): print "Field 5 has to be a number!"
 		if not self.IsFloat(value6): print "Field 6 has to be a number!"
 		if not self.IsFloat(value7): print "Field 7 has to be a number!"
+
+		Input.valuesList = [value1, value2, value3, value4, value5, value6, value7]
+		return Input.valuesList
 		
-	def GetDropDownValue(self, event):
+	def GetDropDownValues(self):
+		print "GetDropDown is called"
 		#self.value_of_combo = self.box.get()
 		#print(self.value_of_combo)
-		widget = event.widget		# get widget
-		text = widget.get()		# get widget text
+		#widget = event.widget		# get widget
+		#text = widget.get()		# get widget text
 		#value = widget.cget('values')	# get values
-		print text
+		#print text
+		
 
-class Output(LabelFrame):
-    def __init__(self, parent):
+		if self.comboBox_1.get() == 'Select Distribution': print "Box 1 has to have a selection"
+		if self.comboBox_2.get() == 'Select Distribution': print "Box 2 has to have a selection"
+		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
+		if self.comboBox_4.get() == 'Select Distribution': print "Box 4 has to have a selection"
+		if self.comboBox_5.get() == 'Select Distribution': print "Box 5 has to have a selection"
+
+		Input.distList = ["", self.comboBox_1.get(), self.comboBox_2.get(), self.comboBox_3.get(), self.comboBox_4.get(), self.comboBox_5.get()]
+		print Input.distList
+		return Input.distList
+
+	def CreateList(self):
+		List = zip(Input.valuesList, Input.distList)
+		#for elem in List:
+		#	print "I am prtinting from CreateList"
+		#	print elem
+
+		return List
+		
+
+class Output(LabelFrame, Input):
+	def __init__(self, parent):
 		LabelFrame.__init__(self, parent, text = "Output")
 		self.outputText = Label(self, text="some output")
 		self.outputText.pack()
+
+	# FOR TESTING
+	#def traverse(item, tree_types=(list,tuple)):
+	#	try:
+	#		for i in iter(item):
+	#			for j in traverse(i):
+	#				yield j
+	#	except TypeError:
+	#		yield item
+
+	def GetList(self):
+		object = Input(self)
+		self.outputList = object.CreateList()
 

@@ -1,10 +1,10 @@
-#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------#
 # main.py
 #  
 # This class is used to manage the application.
 # 
 # Rachel Mailach
-#----------------------------------------------------------------------------------#
+#----------------------------------------------------------------------#
 
 from Tkinter import *
 import simulation
@@ -33,6 +33,7 @@ class MyWindow(Tk):
 
 	def submit(self, event):
 		print "submit method"
+		self.frameOut.GetList()
 	        #value = self.frameIn.getValue()
 	        #result = self.process.addValue(value)
 	        #self.frameOut.outputText.set(result)
