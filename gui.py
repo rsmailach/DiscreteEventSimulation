@@ -24,6 +24,7 @@ class Input(LabelFrame):
 		self.inputEntry_5 = StringVar()
 		self.inputEntry_6 = StringVar()
 		self.inputEntry_7 = StringVar()
+		self.inputEntry_8 = StringVar()
 
 		# create widgets, parent = self because window is parent
 		# Labels
@@ -34,6 +35,7 @@ class Input(LabelFrame):
 		self.jobThreshold = Label(self, text = "k")					# k
 		self.turnoffRate = Label(self, text = u'\u03b1')			# alpha
 		self.upStateRate = Label(self, text = u'\u0263')			# gamma
+		self.simLength = Label(self, text = "simulation length")	# max sim time
 		
 		# Entry Boxes
 		self.entry_1 = Entry(self, textvariable = self.inputEntry_1)
@@ -43,6 +45,7 @@ class Input(LabelFrame):
 		self.entry_5 = Entry(self, textvariable = self.inputEntry_5)
 		self.entry_6 = Entry(self, textvariable = self.inputEntry_6)
 		self.entry_7 = Entry(self, textvariable = self.inputEntry_7)
+		self.entry_8 = Entry(self, textvariable = self.inputEntry_8)
 
 		# Simulate Button
 		self.simulateButton = Button(self, text = "SIMULATE", command = self.OnButtonClick)
@@ -64,8 +67,8 @@ class Input(LabelFrame):
 		self.comboBox_2 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_2.current(0) # set selection
 		#self.comboBox_2.bind('<<ComboboxSelected>>', self.GetDropDownValue)
-		self.comboBox_3 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
-		self.comboBox_3.current(0) # set selection
+#		self.comboBox_3 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
+#		self.comboBox_3.current(0) # set selection
 		#self.comboBox_3.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 		self.comboBox_4 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_4.current(0) # set selection
@@ -82,6 +85,7 @@ class Input(LabelFrame):
 		self.jobThreshold.grid(row = 0, column = 5)
 		self.turnoffRate.grid(row = 1, column = 5)
 		self.upStateRate.grid(row = 2, column = 5)
+		self.simLength.grid(row = 3, column = 5)
 
 		self.entry_1.grid(row = 0, column = 1)
 		self.entry_2.grid(row = 1, column = 1)
@@ -90,12 +94,13 @@ class Input(LabelFrame):
 		self.entry_5.grid(row = 0, column = 6)
 		self.entry_6.grid(row = 1, column = 6)
 		self.entry_7.grid(row = 2, column = 6)
+		self.entry_8.grid(row = 3, column = 6)
 		
 		self.simulateButton.grid(row = 8, columnspan = 8)
 	
 		self.comboBox_1.grid(row = 1, column = 3)
 		self.comboBox_2.grid(row = 2, column = 3)
-		self.comboBox_3.grid(row = 3, column = 3)
+#		self.comboBox_3.grid(row = 3, column = 3)
 		self.comboBox_4.grid(row = 0, column = 7)
 		self.comboBox_5.grid(row = 1, column = 7)
 
@@ -121,6 +126,7 @@ class Input(LabelFrame):
 		value5 = self.inputEntry_5.get()
 		value6 = self.inputEntry_6.get()
 		value7 = self.inputEntry_7.get()
+		value8 = self.inputEntry_8.get()
 
 		if not value1.isdigit():	 print "Field 1 has to be an int"
 		if not self.IsFloat(value2): print "Field 2 has to be a number!"
@@ -129,8 +135,9 @@ class Input(LabelFrame):
 		if not self.IsFloat(value5): print "Field 5 has to be a number!"
 		if not self.IsFloat(value6): print "Field 6 has to be a number!"
 		if not self.IsFloat(value7): print "Field 7 has to be a number!"
+		if not self.IsFloat(value8): print "Field 8 has to be a number!"
 
-		Input.valuesList = [value1, value2, value3, value4, value5, value6, value7]
+		Input.valuesList = [value1, value2, value3, value4, value5, value6, value7, value8]
 		return Input.valuesList
 		
 	def GetDropDownValues(self):
@@ -145,11 +152,11 @@ class Input(LabelFrame):
 
 		if self.comboBox_1.get() == 'Select Distribution': print "Box 1 has to have a selection"
 		if self.comboBox_2.get() == 'Select Distribution': print "Box 2 has to have a selection"
-		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
+#		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
 		if self.comboBox_4.get() == 'Select Distribution': print "Box 4 has to have a selection"
 		if self.comboBox_5.get() == 'Select Distribution': print "Box 5 has to have a selection"
 
-		Input.distList = ["", self.comboBox_1.get(), self.comboBox_2.get(), self.comboBox_3.get(), self.comboBox_4.get(), self.comboBox_5.get()]
+		Input.distList = ["", self.comboBox_1.get(), self.comboBox_2.get(), "", self.comboBox_4.get(), self.comboBox_5.get(), ""]
 		print Input.distList
 		return Input.distList
 
@@ -162,7 +169,7 @@ class Input(LabelFrame):
 		return List
 		
 
-class Output(LabelFrame, Input):
+class Output(LabelFrame): #, Input):
 	def __init__(self, parent):
 		LabelFrame.__init__(self, parent, text = "Output")
 		self.outputText = Label(self, text="some output")
@@ -177,7 +184,7 @@ class Output(LabelFrame, Input):
 	#	except TypeError:
 	#		yield item
 
-	def GetList(self):
-		object = Input(self)
-		self.outputList = object.CreateList()
+	#def GetList(self):
+	#	object = Input(self)
+	#	self.outputList = object.CreateList()
 

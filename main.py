@@ -18,7 +18,6 @@ class MyWindow(Tk):
 
 	def initialize(self):		
 		self.process = simulation.Model()		
-		# self.grid()					# display widgets as grid
 
 		# create the input frame
 		self.frameIn = gui.Input(self)
@@ -30,13 +29,19 @@ class MyWindow(Tk):
 
 		# bind simulate button
 		self.bind("<<input_simulate>>", self.submit)
-
+	
+	def GetList(self):
+		print "getlist from MAIN"
+		var = gui.Input(self)
+		return var.CreateList()
+	
 	def submit(self, event):
 		print "submit method"
-		self.frameOut.GetList()
-	        #value = self.frameIn.getValue()
-	        #result = self.process.addValue(value)
-	        #self.frameOut.outputText.set(result)
+#		self.frameOut.GetList()
+		self.process.Run()
+        #value = self.frameIn.getValue()
+        #result = self.process.addValue(value)
+        #self.frameOut.outputText.set(result)
 
 
 	
