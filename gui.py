@@ -67,14 +67,14 @@ class Input(LabelFrame):
 		self.comboBox_2 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_2.current(0) # set selection
 		#self.comboBox_2.bind('<<ComboboxSelected>>', self.GetDropDownValue)
-#		self.comboBox_3 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
-#		self.comboBox_3.current(0) # set selection
+		self.comboBox_3 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
+		self.comboBox_3.current(0) # set selection
 		#self.comboBox_3.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 		self.comboBox_4 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_4.current(0) # set selection
 		#self.comboBox_4.bind('<<ComboboxSelected>>', self.GetDropDownValue)
-		self.comboBox_5 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
-		self.comboBox_5.current(0) # set selection
+#		self.comboBox_5 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
+#		self.comboBox_5.current(0) # set selection
 		#self.comboBox_5.bind('<<ComboboxSelected>>', self.GetDropDownValue)
 
 		# send to layout manager 
@@ -100,9 +100,9 @@ class Input(LabelFrame):
 	
 		self.comboBox_1.grid(row = 1, column = 3)
 		self.comboBox_2.grid(row = 2, column = 3)
-#		self.comboBox_3.grid(row = 3, column = 3)
-		self.comboBox_4.grid(row = 0, column = 7)
-		self.comboBox_5.grid(row = 1, column = 7)
+		self.comboBox_3.grid(row = 1, column = 7)
+		self.comboBox_4.grid(row = 2, column = 7)
+	#	self.comboBox_5.grid(row = 1, column = 7)
 
 	def OnButtonClick(self):
 		self.GetNumericValues()
@@ -118,7 +118,6 @@ class Input(LabelFrame):
 			return False
 
 	def GetNumericValues(self):
-		print "GetNumericValue is called"
 		value1 = self.inputEntry_1.get()
 		value2 = self.inputEntry_2.get()
 		value3 = self.inputEntry_3.get()
@@ -137,7 +136,10 @@ class Input(LabelFrame):
 		if not self.IsFloat(value7): print "Field 7 has to be a number!"
 		if not self.IsFloat(value8): print "Field 8 has to be a number!"
 
-		Input.valuesList = [value1, value2, value3, value4, value5, value6, value7, value8]
+		Input.myList = [value1, value2, value3, value4, value5, value6, value7, value8]
+		
+		# convert string list to float list
+		Input.valuesList = [float(i) for i in Input.myList]
 		return Input.valuesList
 		
 	def GetDropDownValues(self):
@@ -152,12 +154,12 @@ class Input(LabelFrame):
 
 		if self.comboBox_1.get() == 'Select Distribution': print "Box 1 has to have a selection"
 		if self.comboBox_2.get() == 'Select Distribution': print "Box 2 has to have a selection"
-#		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
+		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
 		if self.comboBox_4.get() == 'Select Distribution': print "Box 4 has to have a selection"
-		if self.comboBox_5.get() == 'Select Distribution': print "Box 5 has to have a selection"
+#		if self.comboBox_5.get() == 'Select Distribution': print "Box 5 has to have a selection"
 
-		Input.distList = ["", self.comboBox_1.get(), self.comboBox_2.get(), "", self.comboBox_4.get(), self.comboBox_5.get(), ""]
-		print Input.distList
+		Input.distList = ["", self.comboBox_1.get(), self.comboBox_2.get(), "", "", self.comboBox_3.get(), self.comboBox_4.get(), ""]
+#		print Input.distList
 		return Input.distList
 
 	def CreateList(self):

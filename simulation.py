@@ -12,7 +12,10 @@ from random import Random,expovariate,uniform,normalvariate # https://docs.pytho
 import gui
 import main
 
-class Model:
+class Globals:
+	Rnd = Random(12345)	
+
+class Model(gui.Input, object):
 	def __init__(self):
 		self.ArrivalRate = None				# lambda
 		self.ArrivalDist = None
@@ -28,9 +31,10 @@ class Model:
 		print "GetList from Model has been run"
 		
 		# grab all input values
-		var = main.MyWindow
+#		var = main.MyWindow
+		self.inputList = super(Model, self).CreateList()
 		print "1111"
-		self.inputList = var.GetList(parent)
+#		self.inputList = var.GetList(self)
 		print "222"
 		
 
@@ -46,14 +50,14 @@ class Model:
 		self.MaxSimTime = self.inputList[7][0]	# simulation length
 
 		ArrivalDistributions =  {
-			'Exponential': Rnd.expovariate(self.ArrivalRate),
-			'Normal': Rnd.normalvariate(self.ArrivalRate)
+			'Exponential': Globals.Rnd.expovariate(self.ArrivalRate),
+			'Normal': Globals.Rnd.normalvariate(self.ArrivalRate)
 			#'Custom':
 		}
 
 		ServiceDistributions =  {
-			'Exponential': Rnd.expovariate(self.ServiceRate),
-			'Normal': Rnd.normalvariate(self.ServiceRate)
+			'Exponential': Globals.Rnd.expovariate(self.ServiceRate),
+			'Normal': Globals.Rnd.normalvariate(self.ServiceRate)
 			#'Custom':
 		}
 		print "end of GetList"
@@ -133,6 +137,4 @@ class ArrivalClass(Process):
 				reactivate(MachineClass.Idle[0])
 
 
-class Globals:
-	Rnd = Random(12345)	
 
