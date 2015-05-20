@@ -30,13 +30,13 @@ class MyWindow(Tk):
 		# bind simulate button
 		self.bind("<<input_simulate>>", self.submit)
 	
-	def GetList(self):
-		print "getlist from MAIN"
-		var = gui.Input(self)
-		return var.CreateList()
+#	def GetList(self):
+#		print "getlist from MAIN"
+#		var = gui.Input(self)
+#		return var.CreateList()
 	
 	def submit(self, event):
-		print "submit method"
+#		print "submit method"
 #		self.frameOut.GetList()
 		self.process.Run()
         #value = self.frameIn.getValue()
