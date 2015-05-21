@@ -18,61 +18,52 @@ class Globals:
 class Model(gui.Input, object):
 	def __init__(self):
 		self.ArrivalRate = None				# lambda
-		self.ArrivalDist = None
+		Model.ArrivalDist = None
 		self.ServiceRate = None				# mu
-		self.ServiceDist = None
+		Model.ServiceDist = None
 		#TurnonTime = self.inputList[3][0]
 		#JobThreshold = self.inputList[4][0]	# k
 		#TurnoffRate = self.inputList[5][0]	# alpha
 		#upStateRate = self.inputList[6][0]	# gamma
 		self.MaxSimTime = 0.0	# simulation length
 
-	def GetList(self):
-		print "GetList from Model has been run"
-		
+	def GetList(self):	
 		# grab all input values
-#		var = main.MyWindow
-		self.inputList = super(Model, self).CreateList()
-		print "1111"
-#		self.inputList = var.GetList(self)
-		print "222"
-		
+		self.inputList = super(Model, self).CreateList()		
 
-		self.NumMachines = self.inputList[0][0]
+		self.NumMachines = int(self.inputList[0][0])
 		self.ArrivalRate = self.inputList[1][0]	# lambda
-		self.ArrivalDist = self.inputList[1][1]
+		Model.ArrivalDist = self.inputList[1][1]
 		self.ServiceRate = self.inputList[2][0]	# mu
-		self.ServiceDist = self.inputList[2][1]
+		Model.ServiceDist = self.inputList[2][1]
 		self.TurnonTime = self.inputList[3][0]
 		self.JobThreshold = self.inputList[4][0]	# k
 		self.TurnoffRate = self.inputList[5][0]	# alpha
 		self.upStateRate = self.inputList[6][0]	# gamma
 		self.MaxSimTime = self.inputList[7][0]	# simulation length
 
-		ArrivalDistributions =  {
+		Model.ArrivalDistributions =  {
 			'Exponential': Globals.Rnd.expovariate(self.ArrivalRate),
-			'Normal': Globals.Rnd.normalvariate(self.ArrivalRate)
+			#'Normal': Globals.Rnd.normalvariate(self.ArrivalRate)
 			#'Custom':
 		}
 
-		ServiceDistributions =  {
+		Model.ServiceDistributions =  {
 			'Exponential': Globals.Rnd.expovariate(self.ServiceRate),
-			'Normal': Globals.Rnd.normalvariate(self.ServiceRate)
+			#'Normal': Globals.Rnd.normalvariate(self.ServiceRate)
 			#'Custom':
 		}
-		print "end of GetList"
 
 	def Run(self):
-		print "Run from Model has been run"
 		self.GetList()
 		initialize()
-		print "Initialize has been run"
-		for I in range(NumMachines):
+		
+		for I in range(self.NumMachines):
 			M = MachineClass()
 			activate(M,M.Run())	
 		A = ArrivalClass()
 		activate(A, A.Run())
-		simulate(until = MaxSimTime)
+		simulate(until = self.MaxSimTime)
 		print "Done simulation!"
 
 class MachineClass(Process):
@@ -89,7 +80,7 @@ class MachineClass(Process):
 		
 	# dictionary of service distributions
 	def SetServiceDist(self):
-		return Model.ServiceDistributions[ServiceDist]
+		return Model.ServiceDistributions[Model.ServiceDist]
 
 
 	def Run(self):
@@ -102,8 +93,7 @@ class MachineClass(Process):
 			# take next job in queue
 			while MachineClass.Queue != []:
 				Job = MachineClass.Queue.pop(0)		# get job
-				yield hold,self, SetServiceDist(ServiceDist) # service job
-				MachineClass.JobServiceTime += now() - Job.ArrivalTime # total wait time of all completed jobs, including queuing and service times
+				yield hold,self, self.SetServiceDist() #ServiceDist) # service job
 
 		MachineClass.Busy.remove(self)
 		MachineClass.Idle.append(self)
@@ -121,13 +111,13 @@ class ArrivalClass(Process):
 		
 	# dictionary of arrival distributions
 	def SetArrivalDist(self):
-		return Model.ArrivalDistributions[ArrivalDist]
+		return Model.ArrivalDistributions[Model.ArrivalDist]
 
 
 	def Run(self):
 		while 1:
-			# wait for arrival of next job
-			yield hold, self, SetArrivalDist(ArrivalDist)
+			# wait for arrival of next job			
+			yield hold, self, self.SetArrivalDist() #Model.ArrivalDist)
 
 			Job = JobClass()
 			MachineClass.Queue.append(Job)
@@ -135,6 +125,3 @@ class ArrivalClass(Process):
 			# check if any machines are idle and ready for work
 			if MachineClass.Idle != []:
 				reactivate(MachineClass.Idle[0])
-
-
-

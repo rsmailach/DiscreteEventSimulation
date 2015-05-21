@@ -143,15 +143,6 @@ class Input(LabelFrame):
 		return Input.valuesList
 		
 	def GetDropDownValues(self):
-		print "GetDropDown is called"
-		#self.value_of_combo = self.box.get()
-		#print(self.value_of_combo)
-		#widget = event.widget		# get widget
-		#text = widget.get()		# get widget text
-		#value = widget.cget('values')	# get values
-		#print text
-		
-
 		if self.comboBox_1.get() == 'Select Distribution': print "Box 1 has to have a selection"
 		if self.comboBox_2.get() == 'Select Distribution': print "Box 2 has to have a selection"
 		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
@@ -176,17 +167,3 @@ class Output(LabelFrame): #, Input):
 		LabelFrame.__init__(self, parent, text = "Output")
 		self.outputText = Label(self, text="some output")
 		self.outputText.pack()
-
-	# FOR TESTING
-	#def traverse(item, tree_types=(list,tuple)):
-	#	try:
-	#		for i in iter(item):
-	#			for j in traverse(i):
-	#				yield j
-	#	except TypeError:
-	#		yield item
-
-	#def GetList(self):
-	#	object = Input(self)
-	#	self.outputList = object.CreateList()
-
