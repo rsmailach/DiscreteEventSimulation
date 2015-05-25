@@ -8,7 +8,8 @@
 
 from Tkinter import *
 import simulation
-import gui
+import guiInput
+import guiOutput
 
 class MyWindow(Tk):
 	def __init__(self, parent):
@@ -17,14 +18,14 @@ class MyWindow(Tk):
 		self.initialize()
 
 	def initialize(self):		
-		self.process = simulation.Model()		
+		#self.process = simulation.Model()		
 
 		# create the input frame
-		self.frameIn = gui.Input(self)
+		self.frameIn = guiInput.Input(self)
 		self.frameIn.grid(row = 0, column = 0, padx = 5, pady =5, ipadx = 5, ipady = 5)
 
 		# create the output frame
-		self.frameOut = gui.Output(self)
+		self.frameOut = guiOutput.Output(self)
 		self.frameOut.grid(row = 1, column = 0, padx = 5, pady =5, ipadx = 5, ipady = 5)
 
 		# bind simulate button
@@ -38,7 +39,8 @@ class MyWindow(Tk):
 	def submit(self, event):
 #		print "submit method"
 #		self.frameOut.GetList()
-		self.process.Run()
+		simulation.Run(self)
+		self.frameOut.GetOutputList()
         #value = self.frameIn.getValue()
         #result = self.process.addValue(value)
         #self.frameOut.outputText.set(result)
