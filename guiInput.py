@@ -27,16 +27,17 @@ class Input(LabelFrame):
 		self.inputEntry_8 = DoubleVar()
 
 		# create widgets, parent = self because window is parent
-		# Labels
-		self.numServers = Label(self, text = "number of servers")	# number of servers
-		self.arrivalRate = Label(self, text = u'\u03bb')			# lambda
-		self.serviceRate = Label(self, text = u'\u03bc')			# mu
-		self.turnonTime = Label(self, text = "turn-on time")		# turn-on time
-		self.jobThreshold = Label(self, text = "k")					# k
-		self.turnoffRate = Label(self, text = u'\u03b1')			# alpha
-		self.upStateRate = Label(self, text = u'\u0263')			# gamma
-		self.simLength = Label(self, text = "simulation length")	# max sim time
-		
+		# Labels	
+		labels = ['number of servers', u'\u03bb', u'\u03bc', 'turn-on time', 'k', u'\u03b1', u'\u0263', 'simulation length']
+		r=0
+		c=0
+		for elem in labels:
+			Label(self, text=elem).grid(row=r, column=c)
+			r=r+1
+			if r > 3:
+				r=0
+				c=3
+			
 		# Entry Boxes
 		self.entry_1 = Entry(self, textvariable = self.inputEntry_1)
 		self.entry_2 = Entry(self, textvariable = self.inputEntry_2)
@@ -49,15 +50,6 @@ class Input(LabelFrame):
 
 		# Simulate Button
 		self.simulateButton = Button(self, text = "SIMULATE", command = self.OnButtonClick)
-
-		# Menu
-		#dropDown = Menu(self)
-		#self.config(menu = dropDown)
-		#subMenu = Menu(dropDown)
-		#dropDown.add_cascade(label = "Distribution", menu = subMenu)
-		#subMenu.add_command(label = "Exponential", command = self.DropDown)
-		#subMenu.add_separator()
-		#subMenu.add_command(label = "Custom", command = self.DropDown)
 
 		self.distributions = ('Select Distribution', 'Exponential', 'Normal', 'Custom')
 
@@ -73,35 +65,22 @@ class Input(LabelFrame):
 		self.comboBox_4 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
 		self.comboBox_4.current(0) # set selection
 
-#		self.comboBox_5 = ttk.Combobox(self, values = self.distributions, state = 'readonly')
-#		self.comboBox_5.current(0) # set selection
-
-		# send to layout manager 
-		self.numServers.grid(row = 0, column = 0)
-		self.arrivalRate.grid(row = 1, column = 0)
-		self.serviceRate.grid(row = 2, column = 0)
-		self.turnonTime.grid(row = 3, column = 0)
-		self.jobThreshold.grid(row = 0, column = 5)
-		self.turnoffRate.grid(row = 1, column = 5)
-		self.upStateRate.grid(row = 2, column = 5)
-		self.simLength.grid(row = 3, column = 5)
-
 		self.entry_1.grid(row = 0, column = 1)
 		self.entry_2.grid(row = 1, column = 1)
 		self.entry_3.grid(row = 2, column = 1)
 		self.entry_4.grid(row = 3, column = 1)
-		self.entry_5.grid(row = 0, column = 6)
-		self.entry_6.grid(row = 1, column = 6)
-		self.entry_7.grid(row = 2, column = 6)
-		self.entry_8.grid(row = 3, column = 6)
+		self.entry_5.grid(row = 0, column = 4)
+		self.entry_6.grid(row = 1, column = 4)
+		self.entry_7.grid(row = 2, column = 4)
+		self.entry_8.grid(row = 3, column = 4)
 		
-		self.simulateButton.grid(row = 8, columnspan = 8)
+		self.simulateButton.grid(row = 8, columnspan = 6)
 	
-		self.comboBox_1.grid(row = 1, column = 3)
-		self.comboBox_2.grid(row = 2, column = 3)
-		self.comboBox_3.grid(row = 1, column = 7)
-		self.comboBox_4.grid(row = 2, column = 7)
-	#	self.comboBox_5.grid(row = 1, column = 7)
+		self.comboBox_1.grid(row = 1, column = 2)
+		self.comboBox_2.grid(row = 2, column = 2)
+		self.comboBox_3.grid(row = 1, column = 5)
+		self.comboBox_4.grid(row = 2, column = 5)
+
 
 	def OnButtonClick(self):
 		self.GetNumericValues()

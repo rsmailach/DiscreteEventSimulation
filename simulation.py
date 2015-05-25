@@ -58,6 +58,9 @@ class Globals:
 			#'Normal': Globals.Rnd.normalvariate(self.ServiceRate)
 			#'Custom':
 		}
+		
+		Globals.rho = Globals.ArrivalRate/Globals.ServiceRate
+		Globals.Utilization = Globals.ArrivalRate/(Globals.ServiceRate*Globals.NumMachines)
 
 # for M/M/c
 def LimitingProbability():	
@@ -74,8 +77,31 @@ def LimitingProbability():
 	pi_0 = pow((1.0 + sum1 + eqn), (-1))
 	return pi_0
 
+# for M/M/c
+def ResponseTime():
+	expectedRT = (1/Globals.ServiceRate)*\
+			+ ((pow((Globals.rho), Globals.NumMachines)*Globals.ServiceRate)/((math.factorial(Globals.NumMachines - 1)) * pow((Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate), 2)))*LimitingProbability()
+	return expectedRT
+
+def TimeQueued():
+	timeQueued = ((pow(Globals.rho, Globals.NumMachines)*Globals.ServiceRate)/((math.factorial(Globals.NumMachines - 1)) * pow((Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate), 2)))*LimitingProbability()
+	return timeQueued
+
+# for M/M/c---------------------???? incorrect?
+def NumJobs():
+	numJobs = Globals.ArrivalRate * ResponseTime()
+	return numJobs
+
+# for M/M/c
+def NumJobsQueued():
+	numJobsQueued = ((pow((Globals.rho), Globals.NumMachines)*Globals.ArrivalRate*Globals.ServiceRate)/(math.factorial(Globals.NumMachines - 1)*pow(Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate, 2))) * LimitingProbability()
+	return numJobsQueued
+
 def CreateOutputList():
-	OutputList = LimitingProbability()
+	OutputList = [Globals.Utilization, LimitingProbability(), ResponseTime(), TimeQueued(), NumJobs(), NumJobsQueued()]
+
+	# formats floats to 4 decimal places
+	#OutputList = [ '%.4f' % elem for elem in OutputList ]
 	return OutputList
 
 def Run(self):
