@@ -9,10 +9,15 @@
 from Tkinter import *
 import ttk
 
+# Define a class inherit from an exception type
+class CustomError(Exception):
+    def __init__(self, arg):
+        # Set some exception infomation
+        self.msg = arg
+
 class Input(LabelFrame):
 	valuesList = []
 	distList = []
-#	List = []
 
 	def __init__(self, parent):
 		LabelFrame.__init__(self, parent, text = "Input")
@@ -87,14 +92,8 @@ class Input(LabelFrame):
 		self.GetDropDownValues()
 
 		# send to submit button in main
-		self.simulateButton.event_generate("<<input_simulate>>")
-
-	def IsFloat(self, string):
-		try:
-			float(string)
-			return True
-		except ValueError:
-			return False
+		self.simulateButton.event_generate("<<input_simulate>>")	
+			
 
 	def GetNumericValues(self):
 		value1 = self.inputEntry_1.get()
@@ -106,14 +105,17 @@ class Input(LabelFrame):
 		value7 = self.inputEntry_7.get()
 		value8 = self.inputEntry_8.get()
 
-		if value1 == 0:	 print "Field 1 has to be non-zero"
-		if value2 == 0.0: print "Field 2 has to be non-zero!"
-		if value3 == 0.0: print "Field 3 has to be non-zero!"
+		if value1 >= 0: print "Field 1 has to be non-zero"
+		if value2 >= 0.0: print "Field 2 has to be non-zero!"
+		if value3 >= 0.0: print "Field 3 has to be non-zero!"
 #		if not self.IsFloat(value4): print "Field 4 has to be a number!"
 #		if not self.IsFloat(value5): print "Field 5 has to be a number!"
 #		if not self.IsFloat(value6): print "Field 6 has to be a number!"
 #		if not self.IsFloat(value7): print "Field 7 has to be a number!"
-		if value8 == 0.0: print "Field 8 has to be non-zero!"
+		if value8 >= 0.0: print "Field 8 has to be non-zero!"
+
+
+	
 
 		Input.valuesList = [value1, value2, value3, value4, value5, value6, value7, value8]
 		return Input.valuesList
@@ -123,7 +125,6 @@ class Input(LabelFrame):
 		if self.comboBox_2.get() == 'Select Distribution': print "Box 2 has to have a selection"
 		if self.comboBox_3.get() == 'Select Distribution': print "Box 3 has to have a selection"
 		if self.comboBox_4.get() == 'Select Distribution': print "Box 4 has to have a selection"
-#		if self.comboBox_5.get() == 'Select Distribution': print "Box 5 has to have a selection"
 
 		Input.distList = ["", self.comboBox_1.get(), self.comboBox_2.get(), "", "", self.comboBox_3.get(), self.comboBox_4.get(), ""]
 		return Input.distList
