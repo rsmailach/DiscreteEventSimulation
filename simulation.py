@@ -8,7 +8,6 @@
 
 from SimPy.Simulation import *
 from random import Random,expovariate,uniform,normalvariate # https://docs.python.org/2/library/random.html
-#from Tkinter import *
 import guiInput
 import main
 import math
@@ -119,7 +118,7 @@ def CalcOutputList():
 	return CalcOutputList
 
 def SimOutputList():
-	SimOutputList = [Globals.m.timeAverage(), "", ""] # Globals.mT.mean(), Globals.msT.mean()]  ###########################################
+	SimOutputList = [Globals.m.timeAverage(), Globals.mT.mean(), Globals.msT.mean()]  ###########################################
 #	print ("timeavg {0:6.4f}".format(Globals.m.timeAverage()))
 	return SimOutputList
 
@@ -137,6 +136,7 @@ def Run(self):
 	activate(A, A.Run())
 	simulate(until = Globals.MaxSimTime)
 	print "Done simulation!"
+	print "mean wait", MachineClass.WaitMon.mean()
 
 class MachineClass(Process):
 	Busy = []	# busy machines
@@ -144,6 +144,7 @@ class MachineClass(Process):
 	Queue = []	# queued for the machines
 	IdlingTime = 0.0
 	JobServiceTime = 0.0
+        WaitMon = Monitor()
 
 	def __init__(self):
 		Process.__init__(self)
@@ -167,20 +168,21 @@ class MachineClass(Process):
 			# take next job in queue
 			while MachineClass.Queue != []:
 				Job = MachineClass.Queue.pop(0)		# get job
-			#	time = now()
 				yield hold,self, self.SetServiceDist() #ServiceDist) # service job
+				Wait = now() - Job.ArrivalTime
+				MachineClass.WaitMon.observe(Wait)
 
 		#print time, "Event: Job begins service"
 
 		MachineClass.Busy.remove(self)
 		MachineClass.Idle.append(self)
-		print now(), "Event: Job finished"
+		#print now(), "Event: Job finished"
 
 
 class JobClass:			
 	def __init__(self):
 		self.ArrivalTime = now()
-		print now(), "Event: Job arrives and joins the queue"
+		#print now(), "Event: Job arrives and joins the queue"
 
 
 class ArrivalClass(Process):

@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------#
 # main.py
-#  
+7#  
 # This class is used to manage the application.
 # 
 # Rachel Mailach
@@ -31,27 +31,17 @@ class MyWindow(Tk):
 		# bind simulate button
 		self.bind("<<input_simulate>>", self.submit)
 	
-#	def GetList(self):
-#		print "getlist from MAIN"
-#		var = gui.Input(self)
-#		return var.CreateList()
-	
 	def submit(self, event):
-#		print "submit method"
-#		self.frameOut.GetList()
 		simulation.Run(self)
 		self.frameOut.GetOutputList()
-        #value = self.frameIn.getValue()
-        #result = self.process.addValue(value)
-        #self.frameOut.outputText.set(result)
 
 
 	
 
 def main():
-	window = MyWindow(None)						# instantiate the class with no parent (None)
+	window = MyWindow(None)				# instantiate the class with no parent (None)
 	window.title('Discrete Event Simulation')	# title the window	
-	#window.geometry("500x600")					# set window size
+	#window.geometry("500x600")			# set window size
 	window.mainloop()							# loop indefinitely, wait for events
 
 
