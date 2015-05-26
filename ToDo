@@ -1,5 +1,8 @@
 
 
 TO DO LIST 
-1. Print out input errors on UI
+1. Display input errors on UI
 2. Break down inputs to correct distributions
+3. Add states
+4. Add simulated outputs
+5. Be able to run simulation multiple times

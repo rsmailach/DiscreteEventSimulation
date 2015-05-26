@@ -27,12 +27,18 @@ class Globals:
 		Globals.JobThreshold = 0.0
 		Globals.TurnoffRate = 0.0
 		Globals.MaxSimTime = 0.0
+		Globals.MaxNumberJobs = 50			####################################### make modifiable
 		Globals.ArrivalDistributions = {}
 		Globals.ServiceDistributions = {}
 
+		Globals.m = Monitor()  ## monitor for the number of jobs
+		Globals.mT  = Monitor()  ## monitor for the time in system
+		Globals.msT = Monitor()  ## monitor for the generated service times
+
+	
+
 	def GetList(self):	
 		# grab all input values
-	#	self.inputList = super(Model, self).CreateList()
 		inputInstance = guiInput.Input(self.parent)
 		inputList = inputInstance.CreateList()		
 
@@ -66,25 +72,30 @@ class Globals:
 def LimitingProbability():	
 	sum1 = 0
 	for iterator in range (1, Globals.NumMachines): # from 1 to NumServers - 1
-		sum1 += (1.0/math.factorial(iterator)) *\
-				pow((Globals.ArrivalRate/Globals.ServiceRate),iterator)
+		sum1 += (1.0/math.factorial(iterator)) \
+				*pow((Globals.ArrivalRate/Globals.ServiceRate),iterator)
 
 	rho = Globals.ArrivalRate / (Globals.NumMachines * Globals.ServiceRate)
-	eqn = 	(1.0/math.factorial(Globals.NumMachines)) *\
-			pow((Globals.ArrivalRate/Globals.ServiceRate), Globals.NumMachines) *\
-			(1.0 / (1.0 - rho))
+	eqn = 	(1.0/math.factorial(Globals.NumMachines)) \
+			*pow((Globals.ArrivalRate/Globals.ServiceRate), Globals.NumMachines) \
+			*(1.0 / (1.0 - rho))
 
 	pi_0 = pow((1.0 + sum1 + eqn), (-1))
 	return pi_0
 
 # for M/M/c
 def ResponseTime():
-	expectedRT = (1/Globals.ServiceRate)*\
-			+ ((pow((Globals.rho), Globals.NumMachines)*Globals.ServiceRate)/((math.factorial(Globals.NumMachines - 1)) * pow((Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate), 2)))*LimitingProbability()
+	expectedRT = (1/Globals.ServiceRate) + ((pow((Globals.rho), Globals.NumMachines)*Globals.ServiceRate) \
+				/((math.factorial(Globals.NumMachines - 1)) \
+				*pow((Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate), 2))) \
+				*LimitingProbability()
 	return expectedRT
 
 def TimeQueued():
-	timeQueued = ((pow(Globals.rho, Globals.NumMachines)*Globals.ServiceRate)/((math.factorial(Globals.NumMachines - 1)) * pow((Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate), 2)))*LimitingProbability()
+	timeQueued = ((pow(Globals.rho, Globals.NumMachines)*Globals.ServiceRate) \
+				/((math.factorial(Globals.NumMachines - 1)) \
+				*pow((Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate), 2))) \
+				*LimitingProbability()
 	return timeQueued
 
 # for M/M/c---------------------???? incorrect?
@@ -94,19 +105,29 @@ def NumJobs():
 
 # for M/M/c
 def NumJobsQueued():
-	numJobsQueued = ((pow((Globals.rho), Globals.NumMachines)*Globals.ArrivalRate*Globals.ServiceRate)/(math.factorial(Globals.NumMachines - 1)*pow(Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate, 2))) * LimitingProbability()
+	numJobsQueued = ((pow((Globals.rho), Globals.NumMachines)*Globals.ArrivalRate*Globals.ServiceRate) \
+					/(math.factorial(Globals.NumMachines - 1) \
+					*pow(Globals.NumMachines*Globals.ServiceRate - Globals.ArrivalRate, 2))) \
+					*LimitingProbability()
 	return numJobsQueued
 
-def CreateOutputList():
-	OutputList = [Globals.Utilization, LimitingProbability(), ResponseTime(), TimeQueued(), NumJobs(), NumJobsQueued()]
+def CalcOutputList():
+	CalcOutputList = [Globals.Utilization, LimitingProbability(), ResponseTime(), TimeQueued(), NumJobs(), NumJobsQueued()]
 
 	# formats floats to 4 decimal places
 	#OutputList = [ '%.4f' % elem for elem in OutputList ]
-	return OutputList
+	return CalcOutputList
+
+def SimOutputList():
+	SimOutputList = [Globals.m.timeAverage(), "", ""] # Globals.mT.mean(), Globals.msT.mean()]  ###########################################
+#	print ("timeavg {0:6.4f}".format(Globals.m.timeAverage()))
+	return SimOutputList
+
 
 def Run(self):
 	globalsInstance = Globals(self)
 	globalsInstance.GetList()
+	Globals.monitor = Monitor()
 	initialize()
 		
 	for I in range(Globals.NumMachines):
@@ -115,7 +136,6 @@ def Run(self):
 	A = ArrivalClass()
 	activate(A, A.Run())
 	simulate(until = Globals.MaxSimTime)
-	CreateOutputList()
 	print "Done simulation!"
 
 class MachineClass(Process):
@@ -134,6 +154,8 @@ class MachineClass(Process):
 	def SetServiceDist(self):
 		return Globals.ServiceDistributions[Globals.ServiceDist]
 
+	
+	
 
 	def Run(self):
 		while 1:
@@ -145,16 +167,20 @@ class MachineClass(Process):
 			# take next job in queue
 			while MachineClass.Queue != []:
 				Job = MachineClass.Queue.pop(0)		# get job
+			#	time = now()
 				yield hold,self, self.SetServiceDist() #ServiceDist) # service job
+
+		#print time, "Event: Job begins service"
 
 		MachineClass.Busy.remove(self)
 		MachineClass.Idle.append(self)
-
+		print now(), "Event: Job finished"
 
 
 class JobClass:			
 	def __init__(self):
 		self.ArrivalTime = now()
+		print now(), "Event: Job arrives and joins the queue"
 
 
 class ArrivalClass(Process):
@@ -169,7 +195,7 @@ class ArrivalClass(Process):
 	def Run(self):
 		while 1:
 			# wait for arrival of next job			
-			yield hold, self, self.SetArrivalDist() #Model.ArrivalDist)
+			yield hold, self, self.SetArrivalDist()							
 
 			Job = JobClass()
 			MachineClass.Queue.append(Job)
