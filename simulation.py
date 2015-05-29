@@ -30,9 +30,9 @@ class Globals:
 		Globals.ArrivalDistributions = {}
 		Globals.ServiceDistributions = {}
 
-		Globals.m = Monitor()  ## monitor for the number of jobs
-		Globals.mT  = Monitor()  ## monitor for the time in system
-		Globals.msT = Monitor()  ## monitor for the generated service times
+		#Globals.m = Monitor()  ## monitor for the number of jobs
+		#Globals.mT  = Monitor()  ## monitor for the time in system
+		#Globals.msT = Monitor()  ## monitor for the generated service times
 
 	
 
@@ -118,7 +118,7 @@ def CalcOutputList():
 	return CalcOutputList
 
 def SimOutputList():
-	SimOutputList = [Globals.m.timeAverage(), Globals.mT.mean(), Globals.msT.mean()]  ###########################################
+	SimOutputList = [MachineClass.SystemMon.mean(), MachineClass.QueueMon.mean()]#Globals.m.timeAverage(), Globals.mT.mean(), Globals.msT.mean()]  ###########################################
 #	print ("timeavg {0:6.4f}".format(Globals.m.timeAverage()))
 	return SimOutputList
 
@@ -136,7 +136,7 @@ def Run(self):
 	activate(A, A.Run())
 	simulate(until = Globals.MaxSimTime)
 	print "Done simulation!"
-	print "mean wait", MachineClass.WaitMon.mean()
+
 
 class MachineClass(Process):
 	Busy = []	# busy machines
@@ -144,19 +144,16 @@ class MachineClass(Process):
 	Queue = []	# queued for the machines
 	IdlingTime = 0.0
 	JobServiceTime = 0.0
-        WaitMon = Monitor()
+	SystemMon = Monitor()
+	QueueMon = Monitor()
 
 	def __init__(self):
 		Process.__init__(self)
 		MachineClass.Idle.append(self)	# starts idle
-	
-		
+			
 	# dictionary of service distributions
 	def SetServiceDist(self):
 		return Globals.ServiceDistributions[Globals.ServiceDist]
-
-	
-	
 
 	def Run(self):
 		while 1:
@@ -167,16 +164,15 @@ class MachineClass(Process):
 
 			# take next job in queue
 			while MachineClass.Queue != []:
-				Job = MachineClass.Queue.pop(0)		# get job
-				yield hold,self, self.SetServiceDist() #ServiceDist) # service job
-				Wait = now() - Job.ArrivalTime
-				MachineClass.WaitMon.observe(Wait)
-
-		#print time, "Event: Job begins service"
+				Job = MachineClass.Queue.pop(0)			# get job
+				TotalQueuedTime = now() - Job.ArrivalTime	# time spent between job arrival, and just before job is serviced
+				MachineClass.QueueMon.observe(TotalQueuedTime)
+				yield hold,self, self.SetServiceDist()	# service the job
+				TotalTimeInSystem = now() - Job.ArrivalTime			# time spent between job arrival, and job completion
+				MachineClass.SystemMon.observe(TotalTimeInSystem) 
 
 		MachineClass.Busy.remove(self)
 		MachineClass.Idle.append(self)
-		#print now(), "Event: Job finished"
 
 
 class JobClass:			

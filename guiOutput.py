@@ -45,7 +45,7 @@ class Output(LabelFrame):
 		f2.pack(side=RIGHT, expand = 1)
 	
 		simLabel = Label(f2, text="Simulated values").grid(row=0, columnspan=2)
-		simLabels = ['Average number in the system', 'Average time in the system', 'Actual average service-time']
+		simLabels = ['Average time in system', 'Average time in queue'] #'Average number in the system', 'Average time in the system', 'Actual average service-time']
 		r=1
 		for elem in simLabels:
 			Label(f2, text=elem).grid(row=r, column=0)
